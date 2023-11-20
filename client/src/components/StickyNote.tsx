@@ -10,7 +10,7 @@ interface StickyNoteProps {
 function StickyNote({ title, noteContent }: StickyNoteProps) {
 	console.log('title in sticky note:', title);
 	return (
-		<div className="m-5">
+		<div className="note-handle m-5">
 			<Paper>
 				<Title>{title}</Title>
 				<Paragraph>{noteContent}</Paragraph>

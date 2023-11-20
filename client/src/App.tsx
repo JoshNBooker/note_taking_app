@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Note, User } from '../../types/Types';
 import StickyNote from './components/StickyNote';
+import Draggable from 'react-draggable';
 
 function App() {
 	const [notes, setNotes] = useState<Note[]>([]);
@@ -54,10 +55,19 @@ function App() {
 				{notes.map((note: Note) => (
 					<ul key={note.id}>
 						<li>
-							<StickyNote
-								title={note.title}
-								noteContent={note.noteContent}
-							/>
+							<Draggable
+								axis="both"
+								onStart={() => console.log('Drag start')} // You can customize the behavior during drag start
+								onStop={() => console.log('Drag stop')}
+								handle=".note-handle"
+							>
+								<div>
+									<StickyNote
+										title={note.title}
+										noteContent={note.noteContent}
+									/>
+								</div>
+							</Draggable>
 						</li>
 					</ul>
 				))}
