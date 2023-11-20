@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Note, User } from '../../types/Types';
-
-import './App.css';
+import StickyNote from './components/StickyNote';
 
 function App() {
 	const [notes, setNotes] = useState<Note[]>([]);
@@ -55,8 +54,10 @@ function App() {
 				{notes.map((note: Note) => (
 					<ul key={note.id}>
 						<li>
-							<h1>{note.title}</h1>
-							<h3>{note.noteContent}</h3>
+							<StickyNote
+								title={note.title}
+								noteContent={note.noteContent}
+							/>
 						</li>
 					</ul>
 				))}
