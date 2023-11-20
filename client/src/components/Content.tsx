@@ -5,7 +5,7 @@ interface ParagraphProps {
 }
 
 function Paragraph({ children }: ParagraphProps) {
-	return <div className="text-base">{children}</div>;
+	return <div className="text-base text-grey-800">{children}</div>;
 }
 
 export default Paragraph;

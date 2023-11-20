@@ -5,7 +5,7 @@ interface TitleProps {
 }
 
 function Title({ children }: TitleProps) {
-	return <h3 className="text-4xl">{children}</h3>;
+	return <h3 className="text-4xl text-grey-800">{children}</h3>;
 }
 
 export default Title;
