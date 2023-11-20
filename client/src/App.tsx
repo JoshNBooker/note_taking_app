@@ -35,6 +35,7 @@ function App() {
 			}
 		})();
 	}, []);
+
 	if (!notes) {
 		return (
 			<div>
@@ -50,7 +51,7 @@ function App() {
 		);
 	}
 	return (
-		<div>
+		<div style={{ position: 'relative' }}>
 			<div>
 				{notes.map((note: Note) => (
 					<ul key={note.id}>
@@ -69,13 +70,6 @@ function App() {
 								</div>
 							</Draggable>
 						</li>
-					</ul>
-				))}
-			</div>
-			<div>
-				{users.map((user: User) => (
-					<ul key={user.id}>
-						<li>{user.userName}</li>
 					</ul>
 				))}
 			</div>
