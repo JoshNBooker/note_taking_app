@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Note, User } from '../../types/Types';
-
-import './App.css';
+import StickyNote from './components/StickyNote';
+import Draggable from 'react-draggable';
 
 function App() {
 	const [notes, setNotes] = useState<Note[]>([]);
@@ -35,6 +35,7 @@ function App() {
 			}
 		})();
 	}, []);
+
 	if (!notes) {
 		return (
 			<div>
@@ -50,21 +51,25 @@ function App() {
 		);
 	}
 	return (
-		<div>
+		<div style={{ position: 'relative' }}>
 			<div>
 				{notes.map((note: Note) => (
 					<ul key={note.id}>
 						<li>
-							<h1>{note.title}</h1>
-							<h3>{note.noteContent}</h3>
+							<Draggable
+								axis="both"
+								onStart={() => console.log('Drag start')} // You can customize the behavior during drag start
+								onStop={() => console.log('Drag stop')}
+								handle=".note-handle"
+							>
+								<div>
+									<StickyNote
+										title={note.title}
+										noteContent={note.noteContent}
+									/>
+								</div>
+							</Draggable>
 						</li>
-					</ul>
-				))}
-			</div>
-			<div>
-				{users.map((user: User) => (
-					<ul key={user.id}>
-						<li>{user.userName}</li>
 					</ul>
 				))}
 			</div>
