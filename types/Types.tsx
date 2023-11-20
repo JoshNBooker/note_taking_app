@@ -1,11 +1,11 @@
 export interface Note {
-    id: number;
+	id: number;
 	title: string;
-	content: string;
+	noteContent: string;
 }
 
 export interface User {
-    id:number;
+	id: number;
 	userName: string;
 	notes: Note[];
 }
