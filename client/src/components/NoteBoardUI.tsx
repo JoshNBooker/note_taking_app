@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { User } from 'firebase/auth';
 
 interface NoteBoardUIProps {
-	currentUser: User;
+	currentUser: User | null;
 }
 
 function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
