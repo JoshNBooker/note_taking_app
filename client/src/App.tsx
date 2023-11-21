@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
-import { Note, User } from '../../types/Types';
+import { useEffect, useContext } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/auth-context';
 import Home from './routes/home';
