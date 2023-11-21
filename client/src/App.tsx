@@ -1,11 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Note, User } from '../../types/Types';
-import StickyNote from './components/StickyNote';
-import Draggable from 'react-draggable';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/auth-context';
+import Home from './routes/home';
+import Profile from './routes/profile';
+import NoteBoardUI from './components/NoteBoardUI';
+import RequireAuth from './components/RequireAuth';
 
 function App() {
 	const [notes, setNotes] = useState<Note[]>([]);
 	const [users, setUsers] = useState<User[]>([]);
+	const { currentUser } = useContext(AuthContext);
+	const navigate = useNavigate();
+	// NOTE: console log for testing purposes
+	console.log('User:', !!currentUser);
+
+	// Check if the current user exists on the initial render.
+	useEffect(() => {
+		if (currentUser) {
+			navigate('/noteboard');
+		}
+	}, [currentUser]);
 	const apiUrl: string = 'http://localhost:8080';
 	const fetchData = async (url: string) => {
 		try {
@@ -51,29 +66,17 @@ function App() {
 		);
 	}
 	return (
-		<div style={{ position: 'relative' }}>
-			<div>
-				{notes.map((note: Note) => (
-					<ul key={note.id}>
-						<li>
-							<Draggable
-								axis="both"
-								onStart={() => console.log('Drag start')} // You can customize the behavior during drag start
-								onStop={() => console.log('Drag stop')}
-								handle=".note-handle"
-							>
-								<div>
-									<StickyNote
-										title={note.title}
-										noteContent={note.noteContent}
-									/>
-								</div>
-							</Draggable>
-						</li>
-					</ul>
-				))}
-			</div>
-		</div>
+		<Routes>
+			<Route index element={<Home />} />
+			<Route
+				path="noteboard"
+				element={
+					<RequireAuth>
+						<NoteBoardUI notes={notes} />
+					</RequireAuth>
+				}
+			/>
+		</Routes>
 	);
 }
 
