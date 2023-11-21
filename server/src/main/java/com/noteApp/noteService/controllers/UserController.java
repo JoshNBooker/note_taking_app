@@ -24,7 +24,7 @@ public class UserController {
     }
     @PostMapping(value = "/users")
     public void createUser(@RequestBody User newUser) {
-        User user = new User(newUser.getUserName(), new ArrayList<>());
+        User user = new User(newUser.getUserName(), newUser.getEmail());
         userRepository.save(user);
     };
     @DeleteMapping(value = "users/{id}")

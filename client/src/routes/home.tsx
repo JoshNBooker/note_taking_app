@@ -1,5 +1,4 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import reactLogo from '.././assets/react.svg';
 import { signInUser } from '../../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -32,7 +31,7 @@ function Home() {
 
 			if (userCredential) {
 				resetFormFields();
-				navigate('/profile');
+				navigate('/noteboard');
 			}
 		} catch (error: any) {
 			console.log('User Sign In Failed', error.message);
@@ -63,7 +62,7 @@ function Home() {
 			);
 
 			resetFormFields();
-			navigate('/profile');
+			navigate('/noteboard');
 		} catch (error: any) {
 			console.error('User Sign Up Failed', error.message);
 		}

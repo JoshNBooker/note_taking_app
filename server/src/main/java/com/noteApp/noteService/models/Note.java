@@ -22,7 +22,6 @@ public class Note {
     public Note(String title, String noteContent) {
         this.title = title;
         this.noteContent = noteContent;
-        this.user = user;
     }
 
     public Note(){}

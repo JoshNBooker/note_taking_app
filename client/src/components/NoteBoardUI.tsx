@@ -1,12 +1,55 @@
 import Draggable from 'react-draggable';
 import { Note } from '../Types.tsx';
 import StickyNote from './StickyNote';
+import { useState, useEffect } from 'react';
+import { User } from 'firebase/auth';
 
 interface NoteBoardUIProps {
-	notes: Note[];
+	currentUser: User;
 }
 
-function NoteBoardUI({ notes }: NoteBoardUIProps) {
+function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
+	const [notes, setNotes] = useState<Note[]>([]);
+	const apiUrl: string = 'http://localhost:8080';
+
+	useEffect(() => {
+		(async () => {
+			try {
+				if (currentUser) {
+					const response = await fetch(
+						`${apiUrl}/notes?email=${currentUser.email}`,
+						{
+							method: 'GET',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+						}
+					);
+
+					if (response.ok) {
+						const notesData = await response.json();
+						console.log('notes:', notesData);
+						setNotes(notesData);
+					} else {
+						console.error(
+							'Failed to fetch notes:',
+							response.statusText
+						);
+					}
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		})();
+	}, [apiUrl]);
+	if (!notes) {
+		return (
+			<div>
+				<h1>No notes</h1>
+			</div>
+		);
+	}
+
 	return (
 		<div style={{ position: 'relative' }}>
 			<div>
