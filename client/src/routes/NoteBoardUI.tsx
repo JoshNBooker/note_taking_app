@@ -1,8 +1,9 @@
 import Draggable from 'react-draggable';
 import { Note } from '../Types.tsx';
-import StickyNote from './StickyNote';
+import StickyNote from '../components/StickyNote.tsx';
 import { useState, useEffect } from 'react';
 import { User } from 'firebase/auth';
+import NewNoteForm from '../components/NewNoteForm.tsx';
 
 interface NoteBoardUIProps {
 	currentUser: User | null;
@@ -73,6 +74,7 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 					</ul>
 				))}
 			</div>
+			<NewNoteForm apiUrl={apiUrl} currentUser={currentUser} />
 		</div>
 	);
 }

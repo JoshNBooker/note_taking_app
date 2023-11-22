@@ -2,7 +2,7 @@ import { useEffect, useContext } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/auth-context';
 import Home from './routes/home';
-import NoteBoardUI from './components/NoteBoardUI';
+import NoteBoardUI from './routes/NoteBoardUI';
 import RequireAuth from './components/RequireAuth';
 
 function App() {
