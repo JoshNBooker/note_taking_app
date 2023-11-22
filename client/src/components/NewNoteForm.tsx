@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Paper from './Paper';
 import Draggable from 'react-draggable';
 import { User } from 'firebase/auth';
@@ -11,9 +11,11 @@ interface NewNoteFormProps {
 function NewNoteForm({ apiUrl, currentUser }: NewNoteFormProps) {
 	const [newFormTitle, setNewFormTitle] = useState('');
 	const [newFormContents, setNewFormContent] = useState('');
+	const [newNotePosition, setNewNotePosition] = useState<
+		DOMRect | undefined
+	>();
 
 	const handleNewNoteSubmit = async () => {
-		console.log('submit');
 		try {
 			if (currentUser) {
 				const response = await fetch(
@@ -26,6 +28,8 @@ function NewNoteForm({ apiUrl, currentUser }: NewNoteFormProps) {
 						body: JSON.stringify({
 							title: newFormTitle,
 							noteContent: newFormContents,
+							x: newNotePosition?.left,
+							y: newNotePosition?.top,
 						}),
 					}
 				);
@@ -58,8 +62,17 @@ function NewNoteForm({ apiUrl, currentUser }: NewNoteFormProps) {
 	};
 
 	return (
-		<Draggable axis="both">
-			<div className="m-5">
+		<Draggable
+			axis="both"
+			onStop={() => {
+				const form = document.querySelector('#newNotePosition');
+				let position = form?.getBoundingClientRect();
+				setNewNotePosition(position);
+				console.log('y', position?.top);
+				console.log('x', position?.left);
+			}}
+		>
+			<div className="m-5" id="newNotePosition">
 				<Paper>
 					<input
 						type="text"
