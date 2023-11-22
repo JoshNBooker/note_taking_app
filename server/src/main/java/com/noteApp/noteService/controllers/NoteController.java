@@ -2,6 +2,7 @@ package com.noteApp.noteService.controllers;
 
 import com.noteApp.noteService.repositories.NoteRepository;
 import com.noteApp.noteService.models.Note;
+import com.noteApp.noteService.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,9 @@ public class NoteController {
     @Autowired
     NoteRepository noteRepository;
     @GetMapping(value = "/notes")
-    public ResponseEntity<List<Note>> getAllNotes() {
-        return new ResponseEntity<>(noteRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<Note>> getAllNotesForUser(
+            @RequestParam(name="email") String email){
+        return new ResponseEntity<>(noteRepository.findByUserEmail(email), HttpStatus.OK);
     }
     @GetMapping(value = "/notes/{id}")
     public ResponseEntity getNote(@PathVariable Long id) {

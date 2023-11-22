@@ -3,11 +3,14 @@ package com.noteApp.noteService.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
 public class User {
+    @Column
+    private String email;
     @Column
     private String userName;
     @OneToMany(mappedBy = "user")
@@ -19,11 +22,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public User(String userName, List<Note> notes) {
+    public User(String userName, String email) {
+        this.email = email;
         this.userName = userName;
-        this.notes = notes;
+        this.notes = new ArrayList<>();
     }
     public User(){}
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getUserName() {
         return userName;
