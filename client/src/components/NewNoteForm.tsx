@@ -28,8 +28,8 @@ function NewNoteForm({ apiUrl, currentUser }: NewNoteFormProps) {
 						body: JSON.stringify({
 							title: newFormTitle,
 							noteContent: newFormContents,
-							x: newNotePosition?.top,
-							y: newNotePosition?.left,
+							x: newNotePosition?.left,
+							y: newNotePosition?.top,
 						}),
 					}
 				);
@@ -68,8 +68,8 @@ function NewNoteForm({ apiUrl, currentUser }: NewNoteFormProps) {
 				const form = document.querySelector('#newNotePosition');
 				let position = form?.getBoundingClientRect();
 				setNewNotePosition(position);
-				console.log('x', position?.top);
-				console.log('y', position?.left);
+				console.log('y', position?.top);
+				console.log('x', position?.left);
 			}}
 		>
 			<div className="m-5" id="newNotePosition">

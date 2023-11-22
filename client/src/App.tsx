@@ -4,6 +4,7 @@ import { AuthContext } from '../context/auth-context';
 import Home from './routes/home';
 import NoteBoardUI from './routes/NoteBoardUI';
 import RequireAuth from './components/RequireAuth';
+import './index.css';
 
 function App() {
 	const { currentUser } = useContext(AuthContext);

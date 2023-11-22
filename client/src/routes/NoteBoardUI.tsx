@@ -54,24 +54,29 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 	return (
 		<div style={{ position: 'relative' }}>
 			<div>
-				{notes.map((note: Note) => (
-					<ul key={note.id} className="list-none">
-						<li>
-							<Draggable
-								axis="both"
-								onStart={() => console.log('Drag start')}
-								onStop={() => console.log('Drag stop')}
-								handle=".note-handle"
-							>
-								<div>
-									<StickyNote
-										title={note.title}
-										noteContent={note.noteContent}
-									/>
-								</div>
-							</Draggable>
-						</li>
-					</ul>
+				{notes.map((note: Note, index: number) => (
+					<div
+						key={index}
+						style={{
+							position: 'absolute',
+							top: `${note.y}px`,
+							left: `${note.x}px`,
+						}}
+					>
+						<Draggable
+							axis="both"
+							onStart={() => console.log('Drag start')}
+							onStop={() => console.log('Drag stop')}
+							handle=".note-handle"
+						>
+							<div>
+								<StickyNote
+									title={note.title}
+									noteContent={note.noteContent}
+								/>
+							</div>
+						</Draggable>
+					</div>
 				))}
 			</div>
 			<NewNoteForm apiUrl={apiUrl} currentUser={currentUser} />
