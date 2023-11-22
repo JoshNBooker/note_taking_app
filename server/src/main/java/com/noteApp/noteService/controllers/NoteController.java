@@ -33,7 +33,7 @@ public class NoteController {
         System.out.println(newNote.getTitle());
         System.out.println("new note content");
         System.out.println(newNote.getNoteContent());
-        Note note = new Note(newNote.getTitle(), newNote.getNoteContent());
+        Note note = new Note(newNote.getTitle(), newNote.getNoteContent(), newNote.getX(),newNote.getY());
         User user = userRepository.findByEmail(email);
         user.getNotes().add(note);
         note.setUser(user);
@@ -46,14 +46,22 @@ public class NoteController {
         noteRepository.deleteById(id);
     };
     @PutMapping(value = "/notes/{id}")
-    public Note editNote(@PathVariable Long id, @RequestBody Note newNote) {
+    public ResponseEntity<?> editNote(@PathVariable Long id, @RequestBody Note newNote) {
         return noteRepository.findById(id).map(note -> {
             note.setTitle(newNote.getTitle());
             note.setNoteContent(newNote.getNoteContent());
-            return noteRepository.save(note);
+            note.setX(newNote.getX());
+            System.out.println("new note x");
+            System.out.println(note.getX());
+            System.out.println("new note y");
+            System.out.println(note.getY());
+            note.setY(newNote.getY());
+            noteRepository.save(note);
+            return new ResponseEntity<>(note, HttpStatus.OK);
         }).orElseGet(() -> {
             newNote.setId(id);
-            return noteRepository.save(newNote);
+            noteRepository.save(newNote);
+            return new ResponseEntity<>(newNote, HttpStatus.OK);
         });
     }
 }

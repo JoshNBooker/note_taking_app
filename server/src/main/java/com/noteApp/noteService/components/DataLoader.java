@@ -8,6 +8,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import com.noteApp.noteService.models.User;
 import com.noteApp.noteService.models.Note;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
@@ -24,9 +25,9 @@ public class DataLoader implements ApplicationRunner {
     }
 
     public void run (ApplicationArguments args) {
-        Note note1 = new Note("Shopping list", "Peas, mint choc chip");
-        Note note2 = new Note("Idea for a story", "A man walks into a bar");
-        Note note3 = new Note("njkf", "neoifneowfnkew");
+        Note note1 = new Note("Shopping list", "Peas, mint choc chip", 520, 400);
+        Note note2 = new Note("Idea for a story", "A man walks into a bar", 200, 480);
+        Note note3 = new Note("njkf", "neoifneowfnkew", 300, 300);
         User user1 = new User("JoshBooker","josh.booker2@gmail.com");
         user1.getNotes().add(note1);
         user1.getNotes().add(note2);

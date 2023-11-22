@@ -14,14 +14,20 @@ public class Note {
     private String title;
     @Column
     private String noteContent;
+    @Column(name = "x_position")
+    private Integer x;
+    @Column(name = "y_position")
+    private Integer y;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnoreProperties({"notes"})
     private User user;
 
-    public Note(String title, String noteContent) {
+    public Note(String title, String noteContent, Integer x, Integer y) {
         this.title = title;
         this.noteContent = noteContent;
+        this.x = x;
+        this.y = y;
     }
 
     public Note(){}
@@ -56,5 +62,21 @@ public class Note {
 
     public void setNoteContent(String noteContent) {
         this.noteContent = noteContent;
+    }
+
+    public Integer getX() {
+        return x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
     }
 }
