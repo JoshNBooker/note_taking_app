@@ -55,11 +55,11 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 		<div style={{ position: 'relative' }}>
 			<div>
 				{notes.map((note: Note) => (
-					<ul key={note.id}>
+					<ul key={note.id} className="list-none">
 						<li>
 							<Draggable
 								axis="both"
-								onStart={() => console.log('Drag start')} // You can customize the behavior during drag start
+								onStart={() => console.log('Drag start')}
 								onStop={() => console.log('Drag stop')}
 								handle=".note-handle"
 							>
