@@ -100,24 +100,25 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 				'note to edit inside handleeditnotefunction: ',
 				noteToEdit
 			);
-			if (currentUser && noteToEdit && newNoteTitle && newNoteContent) {
+			if (currentUser && noteToEdit) {
 				const noteToEditId = noteToEdit.id;
-				console.log('note to edit Id in handleEditNote', noteToEditId);
-				console.log('title in submission:', newNoteTitle);
-				console.log('noteContent in submission:', newNoteContent);
-				console.log('x in submission:', notePosition?.left);
-				console.log('y in submission:', notePosition?.top);
+
 				const response = await fetch(
 					`${apiUrl}/notes/${noteToEditId}`,
-
 					{
 						method: 'PUT',
 						headers: {
 							'Content-Type': 'application/json',
 						},
 						body: JSON.stringify({
-							title: newNoteTitle,
-							noteContent: newNoteContent,
+							title:
+								newNoteTitle === undefined
+									? noteToEdit.title
+									: newNoteTitle,
+							noteContent:
+								newNoteContent === undefined
+									? noteToEdit.noteContent
+									: newNoteContent,
 							x: notePosition?.left,
 							y: notePosition?.top,
 						}),
