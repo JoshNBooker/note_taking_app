@@ -12,11 +12,12 @@ interface NoteBoardUIProps {
 function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 	const [notes, setNotes] = useState<Note[]>([]);
 	const [notePosition, setNotePosition] = useState<DOMRect | undefined>();
-	const [noteTitle, setNoteTitle] = useState<DOMRect | undefined>();
-	const [noteContent, setNoteContent] = useState<DOMRect | undefined>();
+	const [newNoteTitle, setNewNoteTitle] = useState<string>();
+	const [newNoteContent, setNewNoteContent] = useState<string>();
 	const [noteToBeMovedElement, setNoteToBeMovedElement] =
 		useState<HTMLElement | null>();
 	const [noteToBeMoved, setNoteToBeMoved] = useState<Note | undefined>();
+	const [noteToEdit, setNoteToEdit] = useState<Note | undefined>();
 	const apiUrl: string = 'http://localhost:8080';
 
 	useEffect(() => {
@@ -35,7 +36,6 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 
 					if (response.ok) {
 						const notesData = await response.json();
-						console.log('notes:', notesData);
 						setNotes(notesData);
 					} else {
 						console.error(
@@ -58,16 +58,12 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 	}
 
 	useEffect(() => {
-		console.log('position:', notePosition);
-		console.log('note position x', notePosition?.left);
-		console.log('note position y', notePosition?.top);
 		handleUpdateNotePosition();
 	}, [notePosition]);
 
 	const handleUpdateNotePosition = async () => {
 		try {
 			if (currentUser) {
-				console.log('note to be moved id', noteToBeMoved?.id);
 				const response = await fetch(
 					`${apiUrl}/notes/${noteToBeMoved?.id}`,
 					{
@@ -83,14 +79,13 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 						}),
 					}
 				);
-
-				if (response.ok) {
-					const newNote = await response.json();
-					console.log('new note:', newNote);
-					console.log('response: ', response);
-				} else {
-					console.error('Failed to edit note: ', response.statusText);
-				}
+				// if (response.ok) {
+				// 	const newNote = await response.json();
+				// 	console.log('new note:', newNote);
+				// 	console.log('response: ', response);
+				// } else {
+				// 	console.error('Failed to edit note: ', response.statusText);
+				// }
 			}
 		} catch (error) {
 			console.error(error);
@@ -98,19 +93,33 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 	};
 
 	const handleEditNote = async () => {
+		console.log('title about to be submitted: ', newNoteTitle);
+		console.log('contents about to be submittied: ', newNoteContent);
 		try {
-			if (currentUser) {
-				console.log('note to be moved id', noteToBeMoved?.id);
+			console.log(
+				'note to edit inside handleeditnotefunction: ',
+				noteToEdit
+			);
+			if (currentUser && noteToEdit && newNoteTitle && newNoteContent) {
+				const noteToEditId = noteToEdit.id;
+				console.log('note to edit Id in handleEditNote', noteToEditId);
+				console.log('title in submission:', newNoteTitle);
+				console.log('noteContent in submission:', newNoteContent);
+				console.log('x in submission:', notePosition?.left);
+				console.log('y in submission:', notePosition?.top);
 				const response = await fetch(
-					`${apiUrl}/notes/${noteToBeMoved?.id}`,
+					`${apiUrl}/notes/${noteToEditId}`,
+
 					{
 						method: 'PUT',
 						headers: {
 							'Content-Type': 'application/json',
 						},
 						body: JSON.stringify({
-							title: noteTitle,
-							noteContent: noteContent,
+							title: newNoteTitle,
+							noteContent: newNoteContent,
+							x: notePosition?.left,
+							y: notePosition?.top,
 						}),
 					}
 				);
@@ -122,11 +131,14 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 				} else {
 					console.error('Failed to edit note: ', response.statusText);
 				}
+			} else {
+				console.warn('Note to edit is undefined');
 			}
 		} catch (error) {
 			console.error(error);
 		}
 	};
+	console.log('note to edit outside of handleEditNote', noteToEdit);
 
 	return (
 		<div style={{ position: 'relative' }}>
@@ -139,10 +151,6 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 								document.getElementById(`${note.id}`)
 							);
 							setNoteToBeMoved(note);
-							console.log(
-								'note to be moved',
-								noteToBeMovedElement
-							);
 						}}
 						onStop={() => {
 							if (noteToBeMovedElement && noteToBeMoved) {
@@ -162,8 +170,15 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 							id={`${note.id}`}
 						>
 							<StickyNote
-								title={note.title}
-								noteContent={note.noteContent}
+								originalTitle={note.title}
+								originalNoteContent={note.noteContent}
+								setNewNoteTitle={setNewNoteTitle}
+								setNewNoteContent={setNewNoteContent}
+								setNoteToEdit={setNoteToEdit}
+								handleEditNote={handleEditNote}
+								note={note}
+								newNoteTitle={newNoteTitle}
+								newNoteContent={newNoteContent}
 							/>
 							<h1>{note.id}</h1>
 						</div>
