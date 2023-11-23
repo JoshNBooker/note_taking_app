@@ -164,6 +164,8 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 							<StickyNote
 								title={note.title}
 								noteContent={note.noteContent}
+								setNoteTitle={setNoteTitle}
+								setNoteContent={setNoteContent}
 							/>
 							<h1>{note.id}</h1>
 						</div>
