@@ -79,13 +79,13 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 						}),
 					}
 				);
-				// if (response.ok) {
-				// 	const newNote = await response.json();
-				// 	console.log('new note:', newNote);
-				// 	console.log('response: ', response);
-				// } else {
-				// 	console.error('Failed to edit note: ', response.statusText);
-				// }
+				if (response.ok) {
+					const newNote = await response.json();
+					console.log('new note:', newNote);
+					console.log('response: ', response);
+				} else {
+					console.error('Failed to edit note: ', response.statusText);
+				}
 			}
 		} catch (error) {
 			console.error(error);
