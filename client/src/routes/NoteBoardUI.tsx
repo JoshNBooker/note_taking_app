@@ -4,6 +4,8 @@ import StickyNote from '../components/StickyNote.tsx';
 import { useState, useEffect } from 'react';
 import { User } from 'firebase/auth';
 import NewNoteForm from '../components/NewNoteForm.tsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 interface NoteBoardUIProps {
 	currentUser: User | null;
@@ -19,6 +21,9 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 	const [noteToBeMoved, setNoteToBeMoved] = useState<Note | undefined>();
 	const [noteToEdit, setNoteToEdit] = useState<Note | undefined>();
 	const apiUrl: string = 'http://localhost:8080';
+	const [noteToBeDeleted, setNoteToBeDeleted] = useState<Note | undefined>();
+	const [binArea, setBinArea] = useState<DOMRect | null>();
+	const [deleteMode, setDeleteMode] = useState<boolean>(false);
 
 	useEffect(() => {
 		(async () => {
@@ -61,6 +66,15 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 		handleUpdateNotePosition();
 	}, [notePosition]);
 
+	let binDiv = document.getElementById('binArea');
+	// setting the bin Area on initial render
+	useEffect(() => {
+		let binArea = binDiv?.getBoundingClientRect();
+		setBinArea(binArea);
+	}, []);
+
+	console.log('bin area', binArea);
+
 	const handleUpdateNotePosition = async () => {
 		try {
 			if (currentUser) {
@@ -93,8 +107,6 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 	};
 
 	const handleEditNote = async () => {
-		console.log('title about to be submitted: ', newNoteTitle);
-		console.log('contents about to be submittied: ', newNoteContent);
 		try {
 			console.log(
 				'note to edit inside handleeditnotefunction: ',
@@ -139,7 +151,21 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 			console.error(error);
 		}
 	};
-	console.log('note to edit outside of handleEditNote', noteToEdit);
+
+	const handleDeleteNote = async () => {
+		try {
+			if (deleteMode && noteToBeDeleted) {
+				const noteToBeDeletedId = noteToBeDeleted.id;
+				fetch(`${apiUrl}/notes/${noteToBeDeletedId}`, {
+					method: 'DELETE',
+				});
+			} else {
+				console.warn('Note to delete is undefined');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	return (
 		<div style={{ position: 'relative' }}>
@@ -152,12 +178,16 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 								document.getElementById(`${note.id}`)
 							);
 							setNoteToBeMoved(note);
+							setNoteToBeDeleted(note);
 						}}
 						onStop={() => {
 							if (noteToBeMovedElement && noteToBeMoved) {
 								let position =
 									noteToBeMovedElement.getBoundingClientRect();
 								setNotePosition(position);
+							}
+							if (deleteMode) {
+								handleDeleteNote();
 							}
 						}}
 						handle=".note-handle"
@@ -187,6 +217,23 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 				</div>
 			))}
 			<NewNoteForm apiUrl={apiUrl} currentUser={currentUser} />
+			<Draggable
+				axis="both"
+				handle="#binArea"
+				onStop={() => setBinArea(binDiv?.getBoundingClientRect())}
+			>
+				<div
+					id="binArea"
+					className="z-10"
+					onMouseEnter={() => setDeleteMode(true)}
+					onMouseLeave={() => setDeleteMode(false)}
+				>
+					<FontAwesomeIcon
+						icon={faTrash}
+						className="transition-all duration-300 ease-in-out h-16 w-12 hover:h-20 hover:w-16"
+					/>
+				</div>
+			</Draggable>
 		</div>
 	);
 }
