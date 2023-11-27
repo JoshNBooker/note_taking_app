@@ -6,6 +6,8 @@ import { User } from 'firebase/auth';
 import NewNoteForm from '../components/NewNoteForm.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { SignOutUser } from '../../firebase/firebase.ts';
+import { useNavigate } from 'react-router-dom';
 
 interface NoteBoardUIProps {
 	currentUser: User | null;
@@ -24,8 +26,9 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 	const [noteToBeDeleted, setNoteToBeDeleted] = useState<Note | undefined>();
 	const [binArea, setBinArea] = useState<DOMRect | null>();
 	const [deleteMode, setDeleteMode] = useState<boolean>(false);
+	const navigate = useNavigate();
 
-	useEffect(() => {
+	const fetchNotes = async () => {
 		(async () => {
 			try {
 				if (currentUser) {
@@ -53,14 +56,11 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 				console.error(error);
 			}
 		})();
-	}, [apiUrl]);
-	if (!notes) {
-		return (
-			<div>
-				<h1>No notes</h1>
-			</div>
-		);
-	}
+	};
+
+	useEffect(() => {
+		fetchNotes();
+	}, []);
 
 	useEffect(() => {
 		handleUpdateNotePosition();
@@ -165,6 +165,12 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 		} catch (error) {
 			console.error(error);
 		}
+		fetchNotes();
+	};
+	const handleSignOutUser = async () => {
+		SignOutUser().then(() => {
+			navigate('/');
+		});
 	};
 
 	return (
@@ -216,7 +222,11 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 					</Draggable>
 				</div>
 			))}
-			<NewNoteForm apiUrl={apiUrl} currentUser={currentUser} />
+			<NewNoteForm
+				apiUrl={apiUrl}
+				currentUser={currentUser}
+				fetchNotes={fetchNotes}
+			/>
 			<Draggable
 				axis="both"
 				handle="#binArea"
@@ -234,6 +244,7 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 					/>
 				</div>
 			</Draggable>
+			<button onClick={handleSignOutUser}>Sign Out</button>
 		</div>
 	);
 }
