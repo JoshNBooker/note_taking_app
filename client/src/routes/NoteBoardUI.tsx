@@ -219,7 +219,6 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 								newNoteTitle={newNoteTitle}
 								newNoteContent={newNoteContent}
 							/>
-							<h1>{note.id}</h1>
 						</div>
 					</Draggable>
 				</div>
