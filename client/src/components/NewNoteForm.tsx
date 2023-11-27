@@ -15,6 +15,7 @@ function NewNoteForm({ apiUrl, currentUser, fetchNotes }: NewNoteFormProps) {
 	const [newNotePosition, setNewNotePosition] = useState<
 		DOMRect | undefined
 	>();
+	const [isPeeled, setPeeled] = useState(false);
 
 	const handleNewNoteSubmit = async () => {
 		try {
@@ -53,6 +54,11 @@ function NewNoteForm({ apiUrl, currentUser, fetchNotes }: NewNoteFormProps) {
 		fetchNotes();
 	};
 
+	const handlePeelNote = () => {
+		setPeeled(true);
+		handleNewNoteSubmit();
+	};
+
 	const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setNewFormTitle(event.target.value);
 		console.log('new form title: ', newFormTitle);
@@ -70,28 +76,38 @@ function NewNoteForm({ apiUrl, currentUser, fetchNotes }: NewNoteFormProps) {
 				const form = document.querySelector('#newNotePosition');
 				let position = form?.getBoundingClientRect();
 				setNewNotePosition(position);
-				console.log('y', position?.top);
-				console.log('x', position?.left);
 			}}
 		>
-			<div className="m-5" id="newNotePosition">
-				<Paper>
-					<input
-						type="text"
-						name="title"
-						value={newFormTitle}
-						onChange={handleTitleChange}
-						placeholder="Title"
-					/>
-					<input
-						type="textarea"
-						name="contents"
-						value={newFormContents}
-						onChange={handleContentsChange}
-						placeholder="Write your note..."
-					/>
-					<button onClick={handleNewNoteSubmit}>rip</button>
-				</Paper>
+			<div
+				className={`relative w-72 h-80 p-4 sticky-note-pad ${
+					isPeeled ? 'transform -translate-y-full' : ''
+				}`}
+				id="newNotePosition"
+			>
+				<div className="absolute bottom-0 sticky-note-form p-4 rounded-lg w-full">
+					<Paper>
+						<input
+							type="text"
+							name="title"
+							value={newFormTitle}
+							onChange={handleTitleChange}
+							placeholder="Title"
+							className="w-full border-none resize-none bg-transparent text-4xl italic"
+						/>
+						<input
+							type="textarea"
+							name="contents"
+							value={newFormContents}
+							onChange={handleContentsChange}
+							placeholder="Write your note..."
+							className="w-full border-none resize-none bg-transparent text-base italic"
+						/>
+						<div
+							className="absolute bottom-0 right-0 w-8 h-8 hover:bg-yellow-500 cursor-pointer translate transform ease-in-out transition-all duration-500 hover:shadow-2xl"
+							onClick={handlePeelNote}
+						></div>
+					</Paper>
+				</div>
 			</div>
 		</Draggable>
 	);
