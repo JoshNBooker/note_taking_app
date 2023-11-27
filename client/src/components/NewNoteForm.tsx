@@ -6,9 +6,10 @@ import { User } from 'firebase/auth';
 interface NewNoteFormProps {
 	apiUrl: string;
 	currentUser: User | null;
+	fetchNotes: Function;
 }
 
-function NewNoteForm({ apiUrl, currentUser }: NewNoteFormProps) {
+function NewNoteForm({ apiUrl, currentUser, fetchNotes }: NewNoteFormProps) {
 	const [newFormTitle, setNewFormTitle] = useState('');
 	const [newFormContents, setNewFormContent] = useState('');
 	const [newNotePosition, setNewNotePosition] = useState<
@@ -49,6 +50,7 @@ function NewNoteForm({ apiUrl, currentUser }: NewNoteFormProps) {
 		} catch (error) {
 			console.error(error);
 		}
+		fetchNotes();
 	};
 
 	const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
