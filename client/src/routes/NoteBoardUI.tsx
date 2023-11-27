@@ -67,11 +67,13 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 	}, [notePosition]);
 
 	let binDiv = document.getElementById('binArea');
-	// setting the bin Area on initial render
+	let bin = binDiv?.getBoundingClientRect();
+	const updateBinArea = () => {
+		setBinArea(bin);
+	};
 	useEffect(() => {
-		let binArea = binDiv?.getBoundingClientRect();
-		setBinArea(binArea);
-	}, []);
+		updateBinArea();
+	}, [notes]);
 
 	console.log('bin area', binArea);
 
@@ -230,7 +232,7 @@ function NoteBoardUI({ currentUser }: NoteBoardUIProps) {
 			<Draggable
 				axis="both"
 				handle="#binArea"
-				onStop={() => setBinArea(binDiv?.getBoundingClientRect())}
+				onStop={() => setBinArea(bin)}
 			>
 				<div
 					id="binArea"
